@@ -14,4 +14,5 @@ generated: true
 
 ## Pesquisas
 
-- [[../10-sources/github/gh-issue-9-ferramentas-mcp-para-sql-server|Ferramentas MCP para SQL Server]] — 2026-11-06 · Issue #9
+- [[../10-sources/github/gh-issue-9-ferramentas-mcp-para-sql-server.md|Ferramentas MCP para SQL Server]] — 2026-11-06 · Issue #9
+- [[../10-sources/github/comments/gh-comment-6684991649.md|Complemento à Issue #9: Ferramentas MCP para SQL Server]] — 2026-11-06 · Comentário #6684991649 · Issue #9
