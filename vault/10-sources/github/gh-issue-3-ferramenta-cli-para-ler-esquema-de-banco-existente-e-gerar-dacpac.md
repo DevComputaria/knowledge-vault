@@ -2,9 +2,9 @@
 id: "gh-issue-3"
 title: "ferramenta cli para ler esquema de banco existente e gerar dacpac"
 kind: "research-source"
-domain: "uncategorized"
+domain: "database-cli"
 tags:
-  - "domain/uncategorized"
+  - "domain/database-cli"
   - "source/ai"
 ai_provider: "Unknown"
 source_issue: 3
@@ -19,7 +19,7 @@ evidence_status: "unverified"
 > [!info] Proveniência
 > Captura integral da Issue [#3](https://github.com/DevComputaria/knowledge-vault/issues/3). O conteúdo e as referências ainda não foram verificados.
 
-**Domínio:** [[../../30-mocs/domain-uncategorized|uncategorized]]
+**Domínio:** [[../../30-mocs/domain-database-cli|database-cli]]
 
 ## Pesquisa original
 
@@ -169,6 +169,12 @@ Nenhuma referência informada.
 
 <details>
 <summary>Exibir corpo original</summary>
+
+### Domínio
+
+database-cli
+
+### Pesquisa integral
 
 **Na lista anterior, não. A CLI adequada para ler o esquema de um SQL Server existente e gerar um `.dacpac` é o Microsoft SqlPackage**, usando a ação `Extract`. Não precisa de MCP nem de Copilot.
 

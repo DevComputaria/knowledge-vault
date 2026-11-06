@@ -1,13 +1,13 @@
 ---
-title: "MOC: uncategorized"
+title: "MOC: database-cli"
 kind: "moc"
-domain: "uncategorized"
+domain: "database-cli"
 tags:
-  - "moc/uncategorized"
+  - "moc/database-cli"
 generated: true
 ---
 
-# uncategorized
+# database-cli
 
 > [!warning] Gerado automaticamente
 > Este índice é reconstruído a partir de `data/manifest.json`.
