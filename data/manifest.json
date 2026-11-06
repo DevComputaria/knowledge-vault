@@ -66,6 +66,26 @@
         "source/ai"
       ],
       "title": "Ferramentas MCP para SQL Server"
+    },
+    {
+      "author": "marcialwushu",
+      "created": "2026-11-06",
+      "domain": "uncategorized",
+      "id": "gh-comment-6684991649",
+      "kind": "research-comment",
+      "parent_id": "gh-issue-9",
+      "path": "vault/10-sources/github/comments/gh-comment-6684991649.md",
+      "source_comment": 6684991649,
+      "source_issue": 9,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/9#issuecomment-6684991649",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai",
+        "source/github-comment"
+      ],
+      "title": "Complemento à Issue #9: Ferramentas MCP para SQL Server",
+      "updated": "2026-11-06"
     }
   ]
 }
