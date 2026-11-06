@@ -13,4 +13,5 @@ kind: home
 - [Maps of Content](../30-mocs/)
 
 Use `Research.base` no Obsidian para filtrar as capturas por domínio, status,
-provedor e data. Os MOCs são reconstruídos automaticamente a cada ingestão.
+provedor e data. Use `Comments.base` para explorar complementos capturados com
+`/knowledge`. Os MOCs são reconstruídos automaticamente a cada ingestão.

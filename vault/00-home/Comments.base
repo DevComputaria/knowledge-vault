@@ -1,0 +1,17 @@
+filters:
+  and:
+    - file.inFolder("10-sources/github/comments")
+    - 'kind == "research-comment"'
+views:
+  - type: table
+    name: Complementos
+    order:
+      - file.name
+      - parent_id
+      - domain
+      - author
+      - updated
+      - status
+    sort:
+      - property: updated
+        direction: DESC

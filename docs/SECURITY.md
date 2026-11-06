@@ -2,7 +2,7 @@
 
 ## Modelo de ameaça
 
-Título, corpo, labels, URLs e anexos de Issues são entrada não confiável. O
+Título, corpo, comentários, labels, URLs e anexos de Issues são entrada não confiável. O
 pipeline não deve interpolar esses valores em comandos shell, expressões do
 workflow ou nomes de branch. O MVP entrega o payload como arquivo JSON ao
 Python e usa o número inteiro da Issue nos identificadores.
@@ -13,6 +13,10 @@ Python e usa o número inteiro da Issue nos identificadores.
 - Actions de terceiros fixadas por SHA e anotadas com a versão correspondente;
 - processamento limitado a Issues recém-abertas ou ao evento da label exata
   `knowledge/ready`;
+- comentários exigem `/knowledge` como primeira linha, excluem Pull Requests e
+  usam apenas IDs numéricos em paths e branches;
+- somente comentários de `OWNER`, `MEMBER` ou `COLLABORATOR` iniciam a
+  automação com permissão de escrita;
 - nenhuma execução de conteúdo da Issue;
 - escrita dentro de paths construídos por slugs normalizados;
 - escrita atômica de notas, manifest e MOCs;
