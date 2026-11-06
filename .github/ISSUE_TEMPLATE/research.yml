@@ -1,0 +1,56 @@
+name: Nova pesquisa
+description: Capture uma pesquisa para ingestão no Knowledge Vault
+title: "[Research]: "
+labels: ["knowledge/inbox"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Cole a resposta integral. Não inclua segredos ou dados pessoais. Após a revisão, adicione a label `knowledge/ready`.
+  - type: input
+    id: domain
+    attributes:
+      label: Domínio
+      description: Domínio principal em kebab-case (por exemplo, observability)
+      placeholder: observability
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provedor de IA
+      options:
+        - ChatGPT
+        - Claude
+        - Gemini
+        - Copilot
+        - Perplexity
+        - Outro
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Separe por vírgulas; barras criam tags hierárquicas
+      placeholder: observability/ebpf, cloud/kubernetes, opentelemetry
+  - type: textarea
+    id: references
+    attributes:
+      label: Referências
+      description: Uma URL ou referência por linha; elas ainda precisarão ser verificadas
+      placeholder: https://example.com/documentation
+  - type: textarea
+    id: research
+    attributes:
+      label: Pesquisa integral
+      description: Conteúdo original, sem resumo ou edição
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Confirmações
+      options:
+        - label: Revisei o conteúdo e removi segredos e dados pessoais.
+          required: true

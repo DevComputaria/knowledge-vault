@@ -1,0 +1,21 @@
+filters:
+  and:
+    - file.inFolder("10-sources/github")
+    - 'kind == "research-source"'
+views:
+  - type: table
+    name: Todas as pesquisas
+    order:
+      - file.name
+      - domain
+      - ai_provider
+      - created
+      - status
+    sort:
+      - property: created
+        direction: DESC
+  - type: cards
+    name: Por domínio
+    groupBy:
+      property: domain
+      direction: ASC

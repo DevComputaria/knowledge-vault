@@ -1,0 +1,15 @@
+{
+  "action": "labeled",
+  "label": {"name": "knowledge/ready"},
+  "issue": {
+    "number": 123,
+    "title": "[Research]: Observabilidade com eBPF",
+    "body": "### Domínio\n\nObservability\n\n### Provedor de IA\n\nChatGPT\n\n### Tags\n\nobservability/ebpf, cloud/kubernetes, opentelemetry\n\n### Referências\n\nhttps://ebpf.io/\nhttps://opentelemetry.io/\n\n### Pesquisa integral\n\neBPF permite executar programas verificados no kernel Linux. Sua integração com OpenTelemetry pode enriquecer a telemetria de aplicações.\n\n### Confirmações\n\n- [x] Revisei o conteúdo e removi segredos e dados pessoais.",
+    "created_at": "2026-11-05T12:00:00Z",
+    "html_url": "https://github.com/DevComputaria/knowledge-vault/issues/123",
+    "labels": [
+      {"name": "knowledge/inbox"},
+      {"name": "knowledge/ready"}
+    ]
+  }
+}
