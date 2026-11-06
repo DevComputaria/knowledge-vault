@@ -14,4 +14,5 @@ generated: true
 
 ## Pesquisas
 
+- [[../10-sources/github/gh-issue-3-ferramenta-cli-para-ler-esquema-de-banco-existente-e-gerar-dacpac|ferramenta cli para ler esquema de banco existente e gerar dacpac]] — 2026-11-06 · Issue #3
 - [[../10-sources/github/gh-issue-1-data-api-builder-dab-com-mcp|Data API Builder (DAB) com MCP.]] — 2026-11-06 · Issue #1
