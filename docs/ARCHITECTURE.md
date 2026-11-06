@@ -17,6 +17,8 @@ Issue + knowledge/ready
 evento JSON ──► validação ──► nota-fonte ──► manifest ──► MOCs
                                 │                          │
                                 └──────── PR de revisão ──┘
+
+Comentário /knowledge ──► herança do pai ──► nota-comentário ──┘
 ```
 
 1. Ao abrir uma Issue, o workflow adiciona automaticamente a label exata
@@ -33,12 +35,18 @@ evento JSON ──► validação ──► nota-fonte ──► manifest ──
 6. MOCs são reconstruídos do manifest, eliminando deriva de índices manuais.
 7. A mudança segue para uma PR; branch protection deve impedir merge sem revisão.
 
+Comentários em Issues seguem o mesmo pipeline quando começam exatamente com
+`/knowledge`. O pai precisa existir no manifest. A nota recebe ID
+`gh-comment-N`, herda domínio e tags, aponta para a nota pai e produz backlinks
+no Obsidian. Edições atualizam o mesmo path; conversas comuns e comentários em
+Pull Requests não são capturados.
+
 ## Níveis de conhecimento
 
 | Nível | Representação | Estado no MVP |
 | --- | --- | --- |
-| Captura | GitHub Issue | implementado |
-| Fonte | Markdown integral | implementado |
+| Captura | GitHub Issue ou comentário opt-in | implementado |
+| Fonte | Markdown integral com proveniência | implementado |
 | Conhecimento | notas atômicas tipadas | diretório e contrato planejados |
 | Síntese | MOCs, Bases e relações | MOCs/Bases implementados; relações futuras |
 
@@ -74,6 +82,7 @@ executar um reconciliador após merge.
 - não há chamada a LLM, extração semântica ou deduplicação por embeddings;
 - referências são preservadas, mas não verificadas;
 - o manifest compartilhado ainda pode gerar conflitos entre PRs concorrentes;
+- comentários dependem de a nota da Issue pai já estar publicada;
 - o workflow real deve ser validado no repositório GitHub;
 - o arquivo `.base` requer uma versão do Obsidian com o plugin Bases.
 

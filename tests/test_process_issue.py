@@ -22,6 +22,9 @@ class UnitTests(unittest.TestCase):
     def test_normalize_hierarchical_tag(self):
         self.assertEqual(process_issue.normalize_tag("Cloud/Kubernetes Segurança"), "cloud/kubernetes-seguranca")
 
+    def test_wiki_alias_escapes_link_delimiters(self):
+        self.assertEqual(process_issue.wiki_alias("DAB | MCP]"), r"DAB \| MCP\]")
+
     def test_parse_issue_form(self):
         fields = process_issue.parse_issue_form("### Domínio\n\nObservability\n\n### Tags\n\neBPF")
         self.assertEqual(fields["domain"], "Observability")
@@ -140,6 +143,76 @@ class IntegrationTests(unittest.TestCase):
         with self.assertRaises(process_issue.IngestError):
             process_issue.process(self.event, self.root)
         self.assertFalse((self.root.parent / "escaped.md").exists())
+
+
+class CommentIntegrationTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name)
+        self.issue_event = ROOT / "tests" / "fixtures" / "issue.json"
+        self.comment_event = ROOT / "tests" / "fixtures" / "comment.json"
+
+    def tearDown(self):
+        self.temporary.cleanup()
+
+    def ingest_parent(self):
+        return process_issue.process(self.issue_event, self.root)
+
+    def test_comment_creates_linked_note_and_inherits_metadata(self):
+        parent = self.ingest_parent()
+        entry = process_issue.process_comment(self.comment_event, self.root)
+        note = self.root / entry["path"]
+        content = note.read_text(encoding="utf-8")
+        manifest = json.loads((self.root / "data" / "manifest.json").read_text(encoding="utf-8"))
+        moc = (self.root / "vault" / "30-mocs" / "domain-observability.md").read_text(encoding="utf-8")
+
+        self.assertEqual(entry["domain"], parent["domain"])
+        self.assertEqual(entry["title"], "Complemento à Issue #123: Observabilidade com eBPF")
+        self.assertIn("source/github-comment", entry["tags"])
+        self.assertEqual(len(manifest["sources"]), 2)
+        self.assertIn("OpenTelemetry também pode receber", content)
+        self.assertIn("[[../gh-issue-123-observabilidade-com-ebpf", content)
+        self.assertIn("../10-sources/github/comments/gh-comment-987654321", moc)
+        self.assertIn("Comentário #987654321 · Issue #123", moc)
+
+    def test_edited_comment_updates_same_note_idempotently(self):
+        self.ingest_parent()
+        first = process_issue.process_comment(self.comment_event, self.root)
+        payload = json.loads(self.comment_event.read_text(encoding="utf-8"))
+        payload["action"] = "edited"
+        payload["comment"]["body"] = "/knowledge\n\nConteúdo revisado."
+        payload["comment"]["updated_at"] = "2026-11-07T10:00:00Z"
+        edited_event = self.root / "edited-comment.json"
+        edited_event.write_text(json.dumps(payload), encoding="utf-8")
+
+        second = process_issue.process_comment(edited_event, self.root)
+        manifest = json.loads((self.root / "data" / "manifest.json").read_text(encoding="utf-8"))
+        matching = [item for item in manifest["sources"] if item["id"] == first["id"]]
+        self.assertEqual(first["path"], second["path"])
+        self.assertEqual(len(matching), 1)
+        self.assertIn("Conteúdo revisado.", (self.root / second["path"]).read_text(encoding="utf-8"))
+
+    def test_comment_without_command_is_rejected(self):
+        self.ingest_parent()
+        payload = json.loads(self.comment_event.read_text(encoding="utf-8"))
+        payload["comment"]["body"] = "Comentário comum."
+        event = self.root / "ordinary-comment.json"
+        event.write_text(json.dumps(payload), encoding="utf-8")
+        with self.assertRaises(process_issue.IngestError):
+            process_issue.process_comment(event, self.root)
+
+    def test_comment_requires_ingested_parent(self):
+        with self.assertRaises(process_issue.IngestError):
+            process_issue.process_comment(self.comment_event, self.root)
+
+    def test_pull_request_comment_is_rejected(self):
+        self.ingest_parent()
+        payload = json.loads(self.comment_event.read_text(encoding="utf-8"))
+        payload["issue"]["pull_request"] = {"url": "https://api.github.com/pulls/123"}
+        event = self.root / "pr-comment.json"
+        event.write_text(json.dumps(payload), encoding="utf-8")
+        with self.assertRaises(process_issue.IngestError):
+            process_issue.process_comment(event, self.root)
 
 
 if __name__ == "__main__":

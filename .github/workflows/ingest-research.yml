@@ -3,6 +3,8 @@ name: Ingest research
 on:
   issues:
     types: [opened, labeled]
+  issue_comment:
+    types: [created, edited]
   workflow_dispatch:
     inputs:
       issue_number:
@@ -18,7 +20,16 @@ concurrency:
 
 jobs:
   ingest:
-    if: github.event_name == 'workflow_dispatch' || github.event.action == 'opened' || github.event.label.name == 'knowledge/ready'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.action == 'opened' ||
+      github.event.label.name == 'knowledge/ready' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request == null &&
+       startsWith(github.event.comment.body, '/knowledge') &&
+       (github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -69,10 +80,15 @@ jobs:
         run: python scripts/process_issue.py --event "${{ steps.payload.outputs.path }}" --root . --allow-unready
 
       - name: Process labeled or manually dispatched research
-        if: github.event_name != 'issues' || github.event.action != 'opened'
+        if: github.event_name != 'issue_comment' && (github.event_name != 'issues' || github.event.action != 'opened')
         run: python scripts/process_issue.py --event "${{ steps.payload.outputs.path }}" --root .
 
-      - name: Create review pull request
+      - name: Process opted-in comment
+        if: github.event_name == 'issue_comment'
+        run: python scripts/process_issue.py --event "${{ steps.payload.outputs.path }}" --root . --comment
+
+      - name: Create issue review pull request
+        if: github.event_name != 'issue_comment'
         uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         with:
           token: ${{ github.token }}
@@ -86,4 +102,21 @@ jobs:
             - Confira o texto original e sua proveniência.
             - Valide domínio, tags e referências.
             - Referências são capturadas como não verificadas.
+          labels: knowledge/review
+
+      - name: Create comment review pull request
+        if: github.event_name == 'issue_comment'
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        with:
+          token: ${{ github.token }}
+          branch: automation/knowledge-comment-${{ github.event.comment.id }}
+          delete-branch: true
+          commit-message: "knowledge: ingest comment #${{ github.event.comment.id }}"
+          title: "knowledge: ingest comment from issue #${{ github.event.issue.number }}"
+          body: |
+            Ingestão de comentário iniciado por `/knowledge`.
+
+            - Confira o vínculo com a pesquisa pai.
+            - Valide o domínio e as tags herdadas.
+            - O comentário permanece marcado como não verificado.
           labels: knowledge/review

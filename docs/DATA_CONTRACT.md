@@ -22,10 +22,31 @@ Campos obrigatórios do frontmatter:
 | `status` | enum | `captured` no MVP |
 | `evidence_status` | enum | `unverified` no MVP |
 
+## Nota de comentário
+
+Um comentário iniciado por `/knowledge` possui ID estável
+`gh-comment-<id-do-comentário>` e fica em
+`vault/10-sources/github/comments`. Ele herda `domain` e `tags` da nota pai e
+adiciona `source/github-comment`.
+
+Além dos campos comuns, seu frontmatter contém:
+
+| Campo | Tipo | Semântica |
+| --- | --- | --- |
+| `kind` | string | `research-comment` |
+| `source_comment` | inteiro | ID imutável do comentário no GitHub |
+| `parent_id` | string | ID `gh-issue-N` da pesquisa pai |
+| `author` | string | login do autor no GitHub |
+| `updated` | data ISO | data da última edição capturada |
+
+Editar o comentário atualiza a mesma entrada. Remover `/knowledge` não apaga
+automaticamente uma captura já publicada; exclusões exigem revisão explícita.
+
 ## Manifest
 
-`data/manifest.json` usa `schema_version: 1` e uma lista `sources`. Cada item
-repete os metadados necessários para reconstruir MOCs. Consumidores devem
+`data/manifest.json` usa `schema_version: 1` e uma lista `sources` que pode
+conter Issues e comentários. Cada item repete os metadados necessários para
+reconstruir MOCs. Consumidores devem
 rejeitar versões desconhecidas em vez de adivinhar compatibilidade.
 
 ## Contrato futuro de enriquecimento

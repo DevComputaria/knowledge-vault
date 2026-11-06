@@ -12,6 +12,7 @@ Request: nenhuma interpretação é publicada sem revisão humana.
 
 - Issue Form com campos para domínio, provedor, tags, referências e pesquisa;
 - ingestão segura e idempotente de eventos `issues` do GitHub;
+- captura opt-in de comentários iniciados por `/knowledge`;
 - notas-fonte com YAML frontmatter e proveniência;
 - tags hierárquicas normalizadas e links para MOCs;
 - manifesto JSON usado como índice canônico da automação;
@@ -31,6 +32,7 @@ Requer Python 3.10 ou posterior.
 ```bash
 python3 -m unittest discover -s tests -v
 python3 scripts/process_issue.py --event tests/fixtures/issue.json --root .
+python3 scripts/process_issue.py --event tests/fixtures/comment.json --root . --comment
 ```
 
 O segundo comando cria uma nota em `vault/10-sources/github`, atualiza
@@ -49,16 +51,34 @@ abrir uma Issue.
 4. Revise o diff, referências e metadados antes do merge.
 5. Abra a pasta `vault` como um vault no Obsidian.
 
-O workflow usa apenas `contents: write` e `pull-requests: write`. O título e o
-corpo da Issue são lidos de `event.json` por Python e nunca interpolados como
-shell. Em produção, habilite proteção da branch e revisão obrigatória.
+### Complementar uma pesquisa por comentário
+
+Depois que a Issue pai estiver publicada no vault, crie um comentário cujo
+primeiro conteúdo seja o comando em uma linha própria:
+
+```markdown
+/knowledge
+
+Conteúdo complementar da pesquisa...
+```
+
+O comentário herda domínio e tags da Issue, recebe ID estável pelo ID do
+comentário e cria uma nota em `vault/10-sources/github/comments`. Editar um
+comentário mantendo `/knowledge` atualiza a mesma nota em uma nova PR.
+Comentários comuns, comentários em Pull Requests e comandos de autores sem
+permissão de colaboração no repositório são ignorados.
+
+O workflow usa permissões explícitas para conteúdo, Pull Requests e Issues. O
+título, o corpo e os comentários são lidos de `event.json` por Python e nunca
+interpolados como shell. Em produção, habilite proteção da branch e revisão
+obrigatória.
 
 ## Estrutura
 
 ```text
 .github/                 formulário e workflow
 scripts/process_issue.py ingestão determinística
-vault/10-sources/        capturas integrais e imutáveis por origem
+vault/10-sources/        Issues e comentários preservados por origem
 vault/20-notes/          notas atômicas revisadas (futuro)
 vault/30-mocs/           mapas de conteúdo gerados
 data/manifest.json       índice da automação

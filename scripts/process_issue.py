@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Turn a GitHub Issue event into a source note and deterministic MOCs.
+"""Turn a GitHub Issue or opted-in comment into notes and deterministic MOCs.
 
 Only the Python standard library is used. Issue content is treated as data: it
 is never evaluated, rendered as a template, or passed to a shell.
@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 READY_LABEL = "knowledge/ready"
+KNOWLEDGE_COMMAND = "/knowledge"
 SCHEMA_VERSION = 1
 FIELD_ALIASES = {
     "domain": ("domain", "domínio", "dominio"),
@@ -62,6 +63,17 @@ def slugify(value: str, *, fallback: str = "untitled", limit: int = 80) -> str:
 def normalize_tag(value: str) -> str:
     parts = [slugify(part, fallback="tag", limit=40) for part in value.split("/")]
     return "/".join(part for part in parts if part)
+
+
+def wiki_alias(value: str) -> str:
+    """Escape characters with structural meaning in an Obsidian wikilink alias."""
+    return value.replace("\\", "\\\\").replace("|", "\\|").replace("]", "\\]")
+
+
+def validate_domain(value: Any) -> str:
+    if not isinstance(value, str) or value != slugify(value, fallback="uncategorized", limit=50):
+        raise IngestError("manifest contains an unsafe domain")
+    return value
 
 
 def parse_issue_form(body: str) -> dict[str, str]:
@@ -146,6 +158,15 @@ def validate_source_path(value: str) -> str:
     return path.as_posix()
 
 
+def validate_comment_path(value: str) -> str:
+    """Allow only comment-note paths in the canonical comments folder."""
+    path = Path(value)
+    expected = Path("vault/10-sources/github/comments")
+    if path.is_absolute() or ".." in path.parts or path.parent != expected or path.suffix != ".md":
+        raise IngestError("manifest contains an unsafe comment path")
+    return path.as_posix()
+
+
 def render_source(entry: dict[str, Any], body: str, research: str, references: str) -> str:
     tags = "\n".join(f"  - {yaml_string(tag)}" for tag in entry["tags"])
     moc_link = f"[[../../30-mocs/domain-{entry['domain']}|{entry['domain']}]]"
@@ -181,6 +202,57 @@ def render_source(entry: dict[str, Any], body: str, research: str, references: s
     )
 
 
+def extract_comment_content(body: Any) -> str:
+    if not isinstance(body, str):
+        raise IngestError("comment.body must be a string")
+    match = re.match(r"^/knowledge(?:[ \t]*(?:\r?\n|$))", body, flags=re.IGNORECASE)
+    if not match:
+        raise IngestError(f"comment must start with {KNOWLEDGE_COMMAND!r} on its own line")
+    content = body[match.end():].strip()
+    if not content:
+        raise IngestError("comment does not contain knowledge after the command")
+    return content
+
+
+def render_comment(entry: dict[str, Any], raw_body: str, content: str, parent: dict[str, Any]) -> str:
+    tags = "\n".join(f"  - {yaml_string(tag)}" for tag in entry["tags"])
+    parent_name = Path(parent["path"]).stem
+    parent_link = f"[[../{parent_name}|{wiki_alias(parent['title'])}]]"
+    moc_link = f"[[../../../30-mocs/domain-{entry['domain']}|{entry['domain']}]]"
+    return (
+        "---\n"
+        f"id: {yaml_string(entry['id'])}\n"
+        f"title: {yaml_string(entry['title'])}\n"
+        "kind: \"research-comment\"\n"
+        f"domain: {yaml_string(entry['domain'])}\n"
+        "tags:\n"
+        f"{tags}\n"
+        f"source_issue: {entry['source_issue']}\n"
+        f"source_comment: {entry['source_comment']}\n"
+        f"parent_id: {yaml_string(entry['parent_id'])}\n"
+        f"author: {yaml_string(entry['author'])}\n"
+        f"source_url: {yaml_string(entry['source_url'])}\n"
+        f"created: {yaml_string(entry['created'])}\n"
+        f"updated: {yaml_string(entry['updated'])}\n"
+        "status: \"captured\"\n"
+        "evidence_status: \"unverified\"\n"
+        "---\n\n"
+        f"# {entry['title']}\n\n"
+        "> [!info] Proveniência\n"
+        f"> Comentário [#{entry['source_comment']}]({entry['source_url']}) de "
+        f"@{entry['author']}, vinculado à Issue #{entry['source_issue']}. "
+        "O conteúdo ainda não foi verificado.\n\n"
+        f"**Pesquisa pai:** {parent_link}\n\n"
+        f"**Domínio:** {moc_link}\n\n"
+        "## Conhecimento capturado\n\n"
+        f"{content}\n\n"
+        "## Captura bruta do comentário\n\n"
+        "<details>\n<summary>Exibir comentário original</summary>\n\n"
+        f"{raw_body.rstrip()}\n\n"
+        "</details>\n"
+    )
+
+
 def load_manifest(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {"schema_version": SCHEMA_VERSION, "sources": []}
@@ -209,7 +281,15 @@ def atomic_write(path: Path, content: str) -> None:
 
 
 def write_manifest(path: Path, manifest: dict[str, Any]) -> None:
-    manifest["sources"] = sorted(manifest["sources"], key=lambda item: item["source_issue"])
+    manifest["sources"] = sorted(
+        manifest["sources"],
+        key=lambda item: (
+            item["source_issue"],
+            1 if "source_comment" in item else 0,
+            item.get("source_comment", 0),
+            item["id"],
+        ),
+    )
     atomic_write(path, json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
 
 
@@ -217,7 +297,8 @@ def rebuild_mocs(root: Path, sources: list[dict[str, Any]]) -> None:
     moc_dir = root / "vault" / "30-mocs"
     grouped: dict[str, list[dict[str, Any]]] = {}
     for source in sources:
-        grouped.setdefault(source["domain"], []).append(source)
+        domain = validate_domain(source.get("domain"))
+        grouped.setdefault(domain, []).append(source)
 
     expected: set[Path] = set()
     for domain, entries in sorted(grouped.items()):
@@ -242,10 +323,21 @@ def rebuild_mocs(root: Path, sources: list[dict[str, Any]]) -> None:
             "",
         ]
         for entry in sorted(entries, key=lambda item: (item["created"], item["title"].casefold()), reverse=True):
-            note_name = Path(entry["path"]).stem
+            manifest_path = Path(entry["path"])
+            if manifest_path.is_absolute() or ".." in manifest_path.parts or manifest_path.suffix != ".md":
+                raise IngestError("manifest contains an unsafe note path")
+            try:
+                note_path = Path("..") / manifest_path.relative_to("vault")
+            except ValueError as exc:
+                raise IngestError("manifest contains a note path outside the vault") from exc
+            provenance = (
+                f"Comentário #{entry['source_comment']} · Issue #{entry['source_issue']}"
+                if "source_comment" in entry
+                else f"Issue #{entry['source_issue']}"
+            )
             lines.append(
-                f"- [[../10-sources/github/{note_name}|{entry['title']}]] "
-                f"— {entry['created']} · Issue #{entry['source_issue']}"
+                f"- [[{note_path.as_posix()}|{wiki_alias(entry['title'])}]] "
+                f"— {entry['created']} · {provenance}"
             )
         lines.append("")
         atomic_write(path, "\n".join(lines))
@@ -308,10 +400,88 @@ def process(event_path: Path, root: Path, *, allow_unready: bool = False) -> dic
     return entry
 
 
+def process_comment(event_path: Path, root: Path) -> dict[str, Any]:
+    try:
+        payload = json.loads(event_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise IngestError(f"cannot read event JSON: {exc}") from exc
+
+    issue = issue_from_payload(payload)
+    if "pull_request" in issue:
+        raise IngestError("pull request comments are not knowledge sources")
+    comment = payload.get("comment") if isinstance(payload, dict) else None
+    if not isinstance(comment, dict):
+        raise IngestError("event does not contain a comment object")
+    comment_id = comment.get("id")
+    if not isinstance(comment_id, int) or comment_id <= 0:
+        raise IngestError("comment.id must be a positive integer")
+    raw_body = comment.get("body")
+    content = extract_comment_content(raw_body)
+    author = comment.get("user", {}).get("login") if isinstance(comment.get("user"), dict) else None
+    if not isinstance(author, str) or not author.strip():
+        raise IngestError("comment.user.login must be a non-empty string")
+
+    manifest_path = root / "data" / "manifest.json"
+    manifest = load_manifest(manifest_path)
+    parent_id = f"gh-issue-{issue['number']}"
+    parent = next((item for item in manifest["sources"] if item.get("id") == parent_id), None)
+    if parent is None:
+        raise IngestError("parent issue must be ingested before its comments")
+    if not isinstance(parent.get("path"), str):
+        raise IngestError("parent source has no valid path")
+    validate_source_path(parent["path"])
+    domain = validate_domain(parent.get("domain"))
+    tags = parent.get("tags")
+    parent_title = parent.get("title")
+    if (
+        not isinstance(tags, list)
+        or not all(isinstance(tag, str) for tag in tags)
+        or not isinstance(parent_title, str)
+        or not parent_title
+    ):
+        raise IngestError("parent source has invalid title or tags")
+
+    source_id = f"gh-comment-{comment_id}"
+    previous = next((item for item in manifest["sources"] if item.get("id") == source_id), None)
+    relative_path = (
+        validate_comment_path(previous["path"])
+        if previous and isinstance(previous.get("path"), str)
+        else f"vault/10-sources/github/comments/{source_id}.md"
+    )
+    entry = {
+        "author": author.strip(),
+        "created": parse_date(comment.get("created_at")),
+        "domain": domain,
+        "id": source_id,
+        "kind": "research-comment",
+        "parent_id": parent_id,
+        "path": relative_path,
+        "source_comment": comment_id,
+        "source_issue": issue["number"],
+        "source_url": str(comment.get("html_url") or issue.get("html_url") or ""),
+        "status": "captured",
+        "tags": sorted(set(tags + ["source/github-comment"])),
+        "title": f"Complemento à Issue #{issue['number']}: {parent_title}",
+        "updated": parse_date(comment.get("updated_at") or comment.get("created_at")),
+    }
+
+    atomic_write(root / relative_path, render_comment(entry, raw_body, content, parent))
+    manifest["sources"] = [item for item in manifest["sources"] if item.get("id") != source_id]
+    manifest["sources"].append(entry)
+    write_manifest(manifest_path, manifest)
+    rebuild_mocs(root, manifest["sources"])
+    return entry
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--event", required=True, type=Path, help="GitHub event or issue JSON")
     parser.add_argument("--root", default=Path.cwd(), type=Path, help="repository root")
+    parser.add_argument(
+        "--comment",
+        action="store_true",
+        help=f"process an issue_comment event that starts with {KNOWLEDGE_COMMAND!r}",
+    )
     parser.add_argument(
         "--allow-unready",
         action="store_true",
@@ -323,7 +493,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        entry = process(args.event.resolve(), args.root.resolve(), allow_unready=args.allow_unready)
+        if args.comment:
+            entry = process_comment(args.event.resolve(), args.root.resolve())
+        else:
+            entry = process(args.event.resolve(), args.root.resolve(), allow_unready=args.allow_unready)
     except IngestError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

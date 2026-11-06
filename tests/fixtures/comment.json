@@ -1,0 +1,22 @@
+{
+  "action": "created",
+  "issue": {
+    "number": 123,
+    "title": "[Research]: Observabilidade com eBPF",
+    "body": "Pesquisa pai",
+    "html_url": "https://github.com/DevComputaria/knowledge-vault/issues/123",
+    "labels": [
+      {"name": "knowledge/ready"}
+    ]
+  },
+  "comment": {
+    "id": 987654321,
+    "body": "/knowledge\n\nOpenTelemetry também pode receber telemetria coletada por eBPF.",
+    "created_at": "2026-11-06T15:00:00Z",
+    "updated_at": "2026-11-06T15:00:00Z",
+    "html_url": "https://github.com/DevComputaria/knowledge-vault/issues/123#issuecomment-987654321",
+    "user": {
+      "login": "researcher"
+    }
+  }
+}
