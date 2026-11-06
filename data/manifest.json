@@ -4,14 +4,14 @@
     {
       "ai_provider": "Unknown",
       "created": "2026-11-06",
-      "domain": "uncategorized",
+      "domain": "database-cli",
       "id": "gh-issue-1",
       "path": "vault/10-sources/github/gh-issue-1-data-api-builder-dab-com-mcp.md",
       "source_issue": 1,
       "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/1",
       "status": "captured",
       "tags": [
-        "domain/uncategorized",
+        "domain/database-cli",
         "source/ai"
       ],
       "title": "Data API Builder (DAB) com MCP."
@@ -19,14 +19,14 @@
     {
       "ai_provider": "Unknown",
       "created": "2026-11-06",
-      "domain": "uncategorized",
+      "domain": "database-cli",
       "id": "gh-issue-3",
       "path": "vault/10-sources/github/gh-issue-3-ferramenta-cli-para-ler-esquema-de-banco-existente-e-gerar-dacpac.md",
       "source_issue": 3,
       "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/3",
       "status": "captured",
       "tags": [
-        "domain/uncategorized",
+        "domain/database-cli",
         "source/ai"
       ],
       "title": "ferramenta cli para ler esquema de banco existente e gerar dacpac"

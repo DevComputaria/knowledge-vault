@@ -27,6 +27,17 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(fields["domain"], "Observability")
         self.assertEqual(fields["tags"], "eBPF")
 
+    def test_markdown_heading_inside_research_is_preserved(self):
+        body = (
+            "### Pesquisa integral\n\nIntrodução\n\n### Instalação\n\n"
+            "Execute o comando.\n\n### Confirmações\n\n- [x] Revisado"
+        )
+        fields = process_issue.parse_issue_form(body)
+        self.assertEqual(
+            fields["research"],
+            "Introdução\n\n### Instalação\n\nExecute o comando.",
+        )
+
     def test_issue_must_be_ready(self):
         payload = json.loads((ROOT / "tests" / "fixtures" / "issue.json").read_text())
         payload["issue"]["labels"] = []

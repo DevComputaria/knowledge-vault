@@ -34,6 +34,17 @@ FIELD_ALIASES = {
         "conteudo",
     ),
 }
+FIELD_BY_HEADING = {
+    alias.casefold(): field
+    for field, aliases in FIELD_ALIASES.items()
+    for alias in aliases
+}
+FORM_STOP_HEADINGS = {
+    "confirmações",
+    "confirmacoes",
+    "confirmations",
+    "safety",
+}
 EMPTY_VALUES = {"", "_no response_", "_nenhuma resposta_", "n/a", "none"}
 
 
@@ -60,19 +71,23 @@ def parse_issue_form(body: str) -> dict[str, str]:
     for line in body.splitlines():
         match = re.match(r"^###\s+(.+?)\s*$", line)
         if match:
-            current = match.group(1).strip().casefold()
-            sections.setdefault(current, [])
+            heading = match.group(1).strip().casefold()
+            if heading in FIELD_BY_HEADING:
+                current = FIELD_BY_HEADING[heading]
+                sections.setdefault(current, [])
+            elif heading in FORM_STOP_HEADINGS:
+                current = None
+            elif current is not None:
+                # Markdown headings inside a field are content, not form keys.
+                sections[current].append(line)
         elif current is not None:
             sections[current].append(line)
 
     result: dict[str, str] = {}
-    for field, aliases in FIELD_ALIASES.items():
-        for alias in aliases:
-            if alias.casefold() in sections:
-                value = "\n".join(sections[alias.casefold()]).strip()
-                if value.casefold() not in EMPTY_VALUES:
-                    result[field] = value
-                break
+    for field, lines in sections.items():
+        value = "\n".join(lines).strip()
+        if value.casefold() not in EMPTY_VALUES:
+            result[field] = value
     return result
 
 
