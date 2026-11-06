@@ -15,6 +15,21 @@
         "source/ai"
       ],
       "title": "Data API Builder (DAB) com MCP."
+    },
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-06",
+      "domain": "uncategorized",
+      "id": "gh-issue-3",
+      "path": "vault/10-sources/github/gh-issue-3-ferramenta-cli-para-ler-esquema-de-banco-existente-e-gerar-dacpac.md",
+      "source_issue": 3,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/3",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "ferramenta cli para ler esquema de banco existente e gerar dacpac"
     }
   ]
 }
