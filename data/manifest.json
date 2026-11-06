@@ -34,15 +34,21 @@
     {
       "ai_provider": "Unknown",
       "created": "2026-11-06",
-      "domain": "uncategorized",
+      "domain": "database-cli",
       "id": "gh-issue-6",
       "path": "vault/10-sources/github/gh-issue-6-giving-ai-agents-visibility-into-sql-server-with-mcp-data-exposed-mvp-edition.md",
       "source_issue": 6,
       "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/6",
       "status": "captured",
       "tags": [
-        "domain/uncategorized",
-        "source/ai"
+        "ai-agents",
+        "data-api-builder",
+        "database-cli",
+        "domain/database-cli",
+        "github-copilot",
+        "mcp",
+        "source/ai",
+        "sql-server"
       ],
       "title": "Giving AI agents visibility into SQL Server with MCP | Data Exposed MVP Edition"
     }
