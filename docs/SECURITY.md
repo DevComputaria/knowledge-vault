@@ -11,7 +11,8 @@ Python e usa o número inteiro da Issue nos identificadores.
 
 - permissões explícitas e mínimas no workflow;
 - Actions de terceiros fixadas por SHA e anotadas com a versão correspondente;
-- processamento apenas da label exata `knowledge/ready`;
+- processamento limitado a Issues recém-abertas ou ao evento da label exata
+  `knowledge/ready`;
 - nenhuma execução de conteúdo da Issue;
 - escrita dentro de paths construídos por slugs normalizados;
 - escrita atômica de notas, manifest e MOCs;
@@ -20,9 +21,11 @@ Python e usa o número inteiro da Issue nos identificadores.
 
 ## Configuração recomendada do repositório
 
-Proteja `main`, exija ao menos uma revisão, bloqueie force pushes, habilite
-secret scanning e análise de dependências e restrinja quem pode aplicar a label
-`knowledge/ready`. Revise periodicamente os SHAs das Actions antes de atualizar.
+Proteja `main`, exija ao menos uma revisão, bloqueie force pushes e habilite
+secret scanning e análise de dependências. Toda nova Issue é considerada uma
+captura de pesquisa e recebe `knowledge/ready`; use outro repositório para bugs
+ou altere a regra antes de adotar Issues para desenvolvimento. Revise
+periodicamente os SHAs das Actions antes de atualizar.
 
 O projeto não inclui um secret scanner próprio. Não cole credenciais, tokens,
 dados pessoais ou material confidencial nas Issues. Se um segredo for

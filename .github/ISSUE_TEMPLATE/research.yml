@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Cole a resposta integral. Não inclua segredos ou dados pessoais. Após a revisão, adicione a label `knowledge/ready`.
+        Cole a resposta integral. Não inclua segredos ou dados pessoais. A label `knowledge/ready` será adicionada automaticamente após a criação.
   - type: input
     id: domain
     attributes:

@@ -19,9 +19,12 @@ evento JSON ──► validação ──► nota-fonte ──► manifest ──
                                 └──────── PR de revisão ──┘
 ```
 
-1. O workflow só inicia automaticamente quando a label exata
-   `knowledge/ready` é adicionada.
-2. O script lê o payload JSON e valida número, título, corpo e label.
+1. Ao abrir uma Issue, o workflow adiciona automaticamente a label exata
+   `knowledge/ready` e realiza a ingestão no mesmo job. Isso evita depender de
+   eventos recursivos, que o `GITHUB_TOKEN` não dispara.
+2. O script lê o payload JSON e valida número, título e corpo. Na abertura, a
+   label acabou de ser aplicada e o payload original é aceito explicitamente;
+   execuções posteriores continuam exigindo a label.
 3. Os campos do Issue Form são normalizados; o corpo completo é preservado na
    nota, separado do recorte exibido como pesquisa.
 4. A nota-fonte recebe ID estável `gh-issue-N`. Reprocessamento atualiza a mesma

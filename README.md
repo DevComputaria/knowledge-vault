@@ -37,14 +37,15 @@ O segundo comando cria uma nota em `vault/10-sources/github`, atualiza
 `data/manifest.json` e reconstrói os MOCs em `vault/30-mocs`.
 
 Para simular outra pesquisa, copie o fixture e altere `issue.number`, título e
-corpo. A ingestão exige a label `knowledge/ready`; use `--allow-unready` apenas
-em desenvolvimento local.
+corpo. A execução local exige a label `knowledge/ready`; use `--allow-unready`
+apenas em desenvolvimento. No GitHub, a label é aplicada automaticamente ao
+abrir uma Issue.
 
 ## Uso no GitHub
 
-1. Crie uma Issue pelo formulário **Nova pesquisa**.
-2. Revise a captura e adicione a label `knowledge/ready`.
-3. O workflow executa os testes e abre/atualiza uma PR específica da Issue.
+1. Crie uma Issue pelo formulário **Nova pesquisa** ou com conteúdo livre.
+2. O workflow adiciona `knowledge/ready` automaticamente.
+3. O mesmo job executa os testes e abre/atualiza uma PR da Issue.
 4. Revise o diff, referências e metadados antes do merge.
 5. Abra a pasta `vault` como um vault no Obsidian.
 
