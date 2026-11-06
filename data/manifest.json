@@ -51,6 +51,21 @@
         "sql-server"
       ],
       "title": "Giving AI agents visibility into SQL Server with MCP | Data Exposed MVP Edition"
+    },
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-06",
+      "domain": "uncategorized",
+      "id": "gh-issue-9",
+      "path": "vault/10-sources/github/gh-issue-9-ferramentas-mcp-para-sql-server.md",
+      "source_issue": 9,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/9",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "Ferramentas MCP para SQL Server"
     }
   ]
 }
