@@ -1,4 +1,20 @@
 {
   "schema_version": 1,
-  "sources": []
+  "sources": [
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-06",
+      "domain": "uncategorized",
+      "id": "gh-issue-1",
+      "path": "vault/10-sources/github/gh-issue-1-data-api-builder-dab-com-mcp.md",
+      "source_issue": 1,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/1",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "Data API Builder (DAB) com MCP."
+    }
+  ]
 }
