@@ -86,6 +86,21 @@
       ],
       "title": "Complemento à Issue #9: Ferramentas MCP para SQL Server",
       "updated": "2026-11-06"
+    },
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-06",
+      "domain": "uncategorized",
+      "id": "gh-issue-15",
+      "path": "vault/10-sources/github/gh-issue-15-atualizacoes-do-ecossistema-de-inteligencia-artificial-seguranca-de-agentes-e-o.md",
+      "source_issue": 15,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/15",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "atualizações do ecossistema de inteligência artificial, segurança de agentes e o cenário de ameaças"
     }
   ]
 }
