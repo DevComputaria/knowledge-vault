@@ -14,6 +14,7 @@ generated: true
 
 ## Pesquisas
 
+- [[../10-sources/github/gh-issue-17-automating-security-detection-engineering-a-hands-on-guide-to-implementing-detec.md|Automating Security Detection Engineering: A hands-on guide to implementing Detection as Code]] — 2026-11-07 · Issue #17
 - [[../10-sources/github/gh-issue-13-linguagens-de-programacao-e-verificacao-formal-do-178c-do-330.md|Linguagens de Programação e Verificação Formal (DO-178C / DO-330)]] — 2026-11-06 · Issue #13
 - [[../10-sources/github/gh-issue-9-ferramentas-mcp-para-sql-server.md|Ferramentas MCP para SQL Server]] — 2026-11-06 · Issue #9
 - [[../10-sources/github/comments/gh-comment-6684991649.md|Complemento à Issue #9: Ferramentas MCP para SQL Server]] — 2026-11-06 · Comentário #6684991649 · Issue #9
