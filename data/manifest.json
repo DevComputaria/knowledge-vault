@@ -91,6 +91,21 @@
       "ai_provider": "Unknown",
       "created": "2026-11-06",
       "domain": "uncategorized",
+      "id": "gh-issue-13",
+      "path": "vault/10-sources/github/gh-issue-13-linguagens-de-programacao-e-verificacao-formal-do-178c-do-330.md",
+      "source_issue": 13,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/13",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "Linguagens de Programação e Verificação Formal (DO-178C / DO-330)"
+    },
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-06",
+      "domain": "uncategorized",
       "id": "gh-issue-15",
       "path": "vault/10-sources/github/gh-issue-15-atualizacoes-do-ecossistema-de-inteligencia-artificial-seguranca-de-agentes-e-o.md",
       "source_issue": 15,

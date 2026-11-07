@@ -14,6 +14,7 @@ generated: true
 
 ## Pesquisas
 
+- [[../10-sources/github/gh-issue-13-linguagens-de-programacao-e-verificacao-formal-do-178c-do-330.md|Linguagens de Programação e Verificação Formal (DO-178C / DO-330)]] — 2026-11-06 · Issue #13
 - [[../10-sources/github/gh-issue-9-ferramentas-mcp-para-sql-server.md|Ferramentas MCP para SQL Server]] — 2026-11-06 · Issue #9
 - [[../10-sources/github/comments/gh-comment-6684991649.md|Complemento à Issue #9: Ferramentas MCP para SQL Server]] — 2026-11-06 · Comentário #6684991649 · Issue #9
 - [[../10-sources/github/gh-issue-15-atualizacoes-do-ecossistema-de-inteligencia-artificial-seguranca-de-agentes-e-o.md|atualizações do ecossistema de inteligência artificial, segurança de agentes e o cenário de ameaças]] — 2026-11-06 · Issue #15
