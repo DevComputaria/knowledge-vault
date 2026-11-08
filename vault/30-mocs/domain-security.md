@@ -15,4 +15,5 @@ generated: true
 ## Pesquisas
 
 - [[../10-sources/github/comments/gh-comment-6716303850.md|Complemento à Issue #24: A Year in .NET Security (2024–2025)]] — 2026-11-08 · Comentário #6716303850 · Issue #24
+- [[../10-sources/github/comments/gh-comment-6716514609.md|Complemento à Issue #24: A Year in .NET Security (2024–2025)]] — 2026-11-08 · Comentário #6716514609 · Issue #24
 - [[../10-sources/github/gh-issue-24-a-year-in-net-security-20242025.md|A Year in .NET Security (2024–2025)]] — 2026-11-08 · Issue #24
