@@ -116,6 +116,21 @@
         "source/ai"
       ],
       "title": "atualizações do ecossistema de inteligência artificial, segurança de agentes e o cenário de ameaças"
+    },
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-07",
+      "domain": "uncategorized",
+      "id": "gh-issue-17",
+      "path": "vault/10-sources/github/gh-issue-17-automating-security-detection-engineering-a-hands-on-guide-to-implementing-detec.md",
+      "source_issue": 17,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/17",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "Automating Security Detection Engineering: A hands-on guide to implementing Detection as Code"
     }
   ]
 }
