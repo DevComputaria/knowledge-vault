@@ -131,6 +131,21 @@
         "source/ai"
       ],
       "title": "Automating Security Detection Engineering: A hands-on guide to implementing Detection as Code"
+    },
+    {
+      "ai_provider": "Unknown",
+      "created": "2026-11-08",
+      "domain": "uncategorized",
+      "id": "gh-issue-19",
+      "path": "vault/10-sources/github/gh-issue-19-turbocharged-writing-high-performance-c-and-net-code.md",
+      "source_issue": 19,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/19",
+      "status": "captured",
+      "tags": [
+        "domain/uncategorized",
+        "source/ai"
+      ],
+      "title": "Turbocharged: Writing High-Performance C# and .NET Code"
     }
   ]
 }
