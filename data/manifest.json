@@ -206,6 +206,24 @@
       ],
       "title": "Complemento à Issue #19: Turbocharged: Writing High-Performance C# and .NET Code",
       "updated": "2026-11-08"
+    },
+    {
+      "ai_provider": "Gemini",
+      "created": "2026-11-08",
+      "domain": "security",
+      "id": "gh-issue-24",
+      "path": "vault/10-sources/github/gh-issue-24-a-year-in-net-security-20242025.md",
+      "source_issue": 24,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/24",
+      "status": "captured",
+      "tags": [
+        "domain/security",
+        "dornet",
+        "security",
+        "source/ai",
+        "youtube"
+      ],
+      "title": "A Year in .NET Security (2024–2025)"
     }
   ]
 }
