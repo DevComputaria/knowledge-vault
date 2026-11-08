@@ -247,6 +247,29 @@
       ],
       "title": "Complemento à Issue #24: A Year in .NET Security (2024–2025)",
       "updated": "2026-11-08"
+    },
+    {
+      "author": "marcialwushu",
+      "created": "2026-11-08",
+      "domain": "security",
+      "id": "gh-comment-6716514609",
+      "kind": "research-comment",
+      "parent_id": "gh-issue-24",
+      "path": "vault/10-sources/github/comments/gh-comment-6716514609.md",
+      "source_comment": 6716514609,
+      "source_issue": 24,
+      "source_url": "https://github.com/DevComputaria/knowledge-vault/issues/24#issuecomment-6716514609",
+      "status": "captured",
+      "tags": [
+        "domain/security",
+        "dornet",
+        "security",
+        "source/ai",
+        "source/github-comment",
+        "youtube"
+      ],
+      "title": "Complemento à Issue #24: A Year in .NET Security (2024–2025)",
+      "updated": "2026-11-08"
     }
   ]
 }
